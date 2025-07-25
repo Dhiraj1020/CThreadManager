@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Set path to include mingw32-make and g++
         PATH = "C:\\msys64\\ucrt64\\bin;${env.PATH}"
     }
 
@@ -22,25 +21,33 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo 'Running tests (if any)...'
-                // Add test commands here, e.g. bat 'main.exe'
+                echo 'Running compiled executable for test...'
+                bat '.\\main.exe'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploy stage - add actual deployment logic here.'
+                echo 'Deploying to deploy/ folder...'
+                bat 'mkdir deploy'
+                bat 'copy main.exe deploy\\main.exe'
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                echo 'Archiving the deployed executable...'
+                archiveArtifacts artifacts: 'deploy/main.exe', fingerprint: true
             }
         }
     }
 
     post {
-        failure {
-            echo 'Build failed!'
-        }
         success {
-            echo 'Build succeeded!'
+            echo '✅ Build, test, deploy, and archive complete!'
+        }
+        failure {
+            echo '❌ Build pipeline failed. Please check logs.'
         }
     }
 }
-

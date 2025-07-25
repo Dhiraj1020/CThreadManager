@@ -1,41 +1,21 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out code...'
-                checkout scm
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo 'Building the project...'
-                bat 'make'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Running the program...'
-                bat 'main.exe'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploy stage (placeholder)...'
-                // Replace below with real deploy commands if needed
-                bat 'echo Deploying app...'
-            }
-        }
+    environment {
+        PATH = "C:\\msys64\\ucrt64\\bin;${env.PATH}"
     }
 
-    post {
-        always {
-            echo 'Cleaning up...'
-            bat 'make clean'
+    stages {
+        stage('Verify Compiler and Make') {
+            steps {
+                echo 'Checking g++ and make...'
+
+                bat 'echo PATH=%PATH%'
+                bat 'where g++'
+                bat 'g++ --version'
+                bat 'where make'
+                bat 'make --version'
+            }
         }
     }
 }

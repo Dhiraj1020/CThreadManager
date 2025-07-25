@@ -1,40 +1,36 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out code...'
-                checkout scm
-            }
-        }
+    environment {
+        PATH = "C:\\msys64\\ucrt64\\bin;${env.PATH}" 
+    }
 
+    stages {
         stage('Build') {
             steps {
-                echo 'Building the project...'
+                echo 'Checking compiler'
+                bat 'g++ --version'
+
+                echo 'Building...'
                 bat 'make'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running the program...'
                 bat 'main.exe'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploy stage (placeholder)...'
-                // Replace below with real deploy commands if needed
-                bat 'echo Deploying app...'
+                bat 'echo Deploying...'
             }
         }
     }
 
     post {
         always {
-            echo 'Cleaning up...'
             bat 'make clean'
         }
     }

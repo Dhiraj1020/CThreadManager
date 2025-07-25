@@ -5,7 +5,7 @@ TARGET = main.exe
 
 all: $(TARGET)
 
-$(TARGET): main.cpp
+$(TARGET): ThreadManager.cpp
 	$(CXX) $(CXXFLAGS) -o $(TARGET) ThreadManager.cpp
 
 clean:
